@@ -21,23 +21,49 @@ let ships = [
   }
 ]
 
+let usedIndexes = [];
+
 function randomizePos(size){
-  const Index = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const Direction = ['up', 'down', 'left', 'right'];
-
+  
   let indexDirection = Math.floor(Math.random() * Direction.length);
-  let shipDirection = Direction[indexDirection]
+  let shipDirection = Direction[indexDirection];
+  
+  let indexRowHead = Math.floor(Math.random() * 10);
+  let indexColHead = Math.floor(Math.random() * 10);
+  let headPosition = [indexRowHead, indexColHead];
 
-  for (let i = 0; i < size; i++){
-    
+  let shipPosition = [headPosition];
+
+  for (let i = 0; i < size - 1; i++){
+    if (shipDirection === 'up'){
+      let newIndex = [indexRowHead - (i + 1), indexColHead];
+      if (newIndex[0] >= 0){
+        shipPosition.push(newIndex);
+      }
+    } else if (shipDirection === 'down'){
+      let newIndex = [indexRowHead + (i + 1), indexColHead];
+      if (newIndex[0] <= 10){
+        shipPosition.push(newIndex);
+      } 
+    } else if (shipDirection === 'left'){
+      let newIndex = [indexRowHead, indexColHead - (i + 1)];
+      if (newIndex[1] >= 0){
+        shipPosition.push(newIndex);
+      }
+    } else if (shipDirection === 'right'){
+      let newIndex = [indexRowHead, indexColHead + (i + 1)];
+      if (newIndex[1] <= 10){
+        shipPosition.push(newIndex);
+      }
+    }
   }
-
-  let indexShip 
-  let indexHead = Math.ceil(Math.random() * Index.length)
-
-  return firstIndex
+  if (shipPosition.length != size){
+    return randomizePos(size);
+  } else {
+    return shipPosition;
+  }
 }
-
 
 function printBoard (){
   console.log('     A   B   C   D   E   F   G   H   I   J')
