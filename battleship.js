@@ -1,29 +1,31 @@
+let usedIndexes = [];
+
 let ships = [
   {
     name: 'A',
     size: 5,
-    pos: [[2,3],[2,4],[2,5],[2,6],[2,7]]
+    // pos: [[2,3],[2,4],[2,5],[2,6],[2,7]]
   },
   {
     name: 'B',
     size: 4,
-    pos: [[2,9],[3,9],[4,9],[5,9]]
+    // pos: [[2,9],[3,9],[4,9],[5,9]]
   },
   {
     name: 'C',
     size: 3,
-    pos: [[6,3],[7,3],[8,3]]
+    // pos: [[6,3],[7,3],[8,3]]
   },
   {
     name: 'D',
     size: 2,
-    pos: [[1,1],[1,2]]
+    // pos: [[1,1],[1,2]]
   }
 ]
 
-let usedIndexes = [];
+ships[0].pos = randomizePos (5, usedIndexes);
 
-function randomizePos(size){
+function randomizePos(size, usedIndexes){
   const Direction = ['up', 'down', 'left', 'right'];
   
   let indexDirection = Math.floor(Math.random() * Direction.length);
@@ -36,31 +38,87 @@ function randomizePos(size){
   let shipPosition = [headPosition];
 
   for (let i = 0; i < size - 1; i++){
+    let indexIsUsed = false;
     if (shipDirection === 'up'){
       let newIndex = [indexRowHead - (i + 1), indexColHead];
       if (newIndex[0] >= 0){
-        shipPosition.push(newIndex);
+        if (usedIndexes.length > 0){
+          for (let i in usedIndexes){
+            if (newIndex[0] === usedIndexes[i] || newIndex[1] === usedIndexes[i]){
+              indexIsUsed = true;
+            }
+          }
+        }
+        if (indexIsUsed){
+          return randomizePos(size, usedIndexes);
+        } else {
+          usedIndexes.push(newIndex[0]);
+          usedIndexes.push(newIndex[1]);
+          shipPosition.push(newIndex);
+        }
       }
     } else if (shipDirection === 'down'){
       let newIndex = [indexRowHead + (i + 1), indexColHead];
       if (newIndex[0] <= 10){
-        shipPosition.push(newIndex);
+        if (usedIndexes.length > 0){
+          for (let i in usedIndexes){
+            if (newIndex[0] === usedIndexes[i] || newIndex[1] === usedIndexes[i]){
+              indexIsUsed = true;
+            }
+          }
+        }
+        if (indexIsUsed){
+          return randomizePos(size, usedIndexes);
+        } else {
+          usedIndexes.push(newIndex[0]);
+          usedIndexes.push(newIndex[1]);
+          shipPosition.push(newIndex);
+        }
       } 
     } else if (shipDirection === 'left'){
       let newIndex = [indexRowHead, indexColHead - (i + 1)];
       if (newIndex[1] >= 0){
-        shipPosition.push(newIndex);
+        if (usedIndexes.length > 0){
+          for (let i in usedIndexes){
+            if (newIndex[0] === usedIndexes[i] || newIndex[1] === usedIndexes[i]){
+              indexIsUsed = true;
+            }
+          }
+        }
+        if (indexIsUsed){
+          return randomizePos(size, usedIndexes);
+        } else {
+          usedIndexes.push(newIndex[0]);
+          usedIndexes.push(newIndex[1]);
+          shipPosition.push(newIndex);
+        }
       }
     } else if (shipDirection === 'right'){
       let newIndex = [indexRowHead, indexColHead + (i + 1)];
       if (newIndex[1] <= 10){
-        shipPosition.push(newIndex);
+        if (usedIndexes.length > 0){
+          for (let i in usedIndexes){
+            if (newIndex[0] === usedIndexes[i] || newIndex[1] === usedIndexes[i]){
+              indexIsUsed = true;
+            }
+          }
+        }
+        if (indexIsUsed){
+          return randomizePos(size, usedIndexes);
+        } else {
+          usedIndexes.push(newIndex[0]);
+          usedIndexes.push(newIndex[1]);
+          shipPosition.push(newIndex);
+        }
       }
     }
   }
   if (shipPosition.length != size){
-    return randomizePos(size);
+    return randomizePos(size, usedIndexes);
   } else {
+    for (let i in shipPosition){
+      usedIndexes.push(shipPosition[i])
+    }
     return shipPosition;
   }
 }
