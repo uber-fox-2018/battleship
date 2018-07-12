@@ -23,104 +23,109 @@ let ships = [
   }
 ]
 
-ships[0].pos = randomizePos (5, usedIndexes);
+for (let i in ships){
+  let head = randomizeIndex1()
+  ships[i].pos = randomizePos (ships[i].size, usedIndexes, head);
+}
 
-function randomizePos(size, usedIndexes){
+
+function randomizeDir(){
   const Direction = ['up', 'down', 'left', 'right'];
   
   let indexDirection = Math.floor(Math.random() * Direction.length);
-  let shipDirection = Direction[indexDirection];
-  
+  return Direction[indexDirection];
+}
+
+function randomizeIndex1(){
   let indexRowHead = Math.floor(Math.random() * 10);
   let indexColHead = Math.floor(Math.random() * 10);
-  let headPosition = [indexRowHead, indexColHead];
 
-  let shipPosition = [headPosition];
+  if (usedIndexes.length > 0){
+    for (let i in usedIndexes){
+      if (usedIndexes[i][0] === indexRowHead && usedIndexes[i][1] === indexColHead){
+        return randomizeIndex1()
+      }
+    }
+  }
+
+  usedIndexes.push([indexRowHead, indexColHead])
+  return [indexRowHead, indexColHead];
+}
+
+function randomizePos(size, usedIndexes, index1){
+
+  let shipDirection = randomizeDir();  
+  let headPosition = index1
+  let shipPosition = [];
+  shipPosition.push(headPosition);
 
   for (let i = 0; i < size - 1; i++){
-    let indexIsUsed = false;
+
     if (shipDirection === 'up'){
-      let newIndex = [indexRowHead - (i + 1), indexColHead];
-      if (newIndex[0] >= 0){
-        if (usedIndexes.length > 0){
-          for (let i in usedIndexes){
-            if (newIndex[0] === usedIndexes[i] || newIndex[1] === usedIndexes[i]){
-              indexIsUsed = true;
-            }
+      let newIndex = [headPosition[0] - (i + 1), headPosition[1]];
+      if (newIndex[0] >= 1){
+        for (let i in usedIndexes){
+          if (newIndex[0] === usedIndexes[i][0] && newIndex[1] === usedIndexes[i][1]){
+            return randomizePos(size, usedIndexes, headPosition);
           }
         }
-        if (indexIsUsed){
-          return randomizePos(size, usedIndexes);
-        } else {
-          usedIndexes.push(newIndex[0]);
-          usedIndexes.push(newIndex[1]);
-          shipPosition.push(newIndex);
-        }
+        shipPosition.push(newIndex);
+      } else {
+        return randomizePos(size, usedIndexes, headPosition);
       }
+
     } else if (shipDirection === 'down'){
-      let newIndex = [indexRowHead + (i + 1), indexColHead];
+      let newIndex = [headPosition[0] + (i + 1), headPosition[1]];
       if (newIndex[0] <= 10){
-        if (usedIndexes.length > 0){
-          for (let i in usedIndexes){
-            if (newIndex[0] === usedIndexes[i] || newIndex[1] === usedIndexes[i]){
-              indexIsUsed = true;
-            }
+        for (let i in usedIndexes){
+          if (newIndex[0] === usedIndexes[i][0] && newIndex[1] === usedIndexes[i][1]){
+            return randomizePos(size, usedIndexes, headPosition);
           }
         }
-        if (indexIsUsed){
-          return randomizePos(size, usedIndexes);
-        } else {
-          usedIndexes.push(newIndex[0]);
-          usedIndexes.push(newIndex[1]);
-          shipPosition.push(newIndex);
-        }
-      } 
-    } else if (shipDirection === 'left'){
-      let newIndex = [indexRowHead, indexColHead - (i + 1)];
-      if (newIndex[1] >= 0){
-        if (usedIndexes.length > 0){
-          for (let i in usedIndexes){
-            if (newIndex[0] === usedIndexes[i] || newIndex[1] === usedIndexes[i]){
-              indexIsUsed = true;
-            }
-          }
-        }
-        if (indexIsUsed){
-          return randomizePos(size, usedIndexes);
-        } else {
-          usedIndexes.push(newIndex[0]);
-          usedIndexes.push(newIndex[1]);
-          shipPosition.push(newIndex);
-        }
+        shipPosition.push(newIndex);
+      } else {
+        return randomizePos(size, usedIndexes, headPosition);
       }
-    } else if (shipDirection === 'right'){
-      let newIndex = [indexRowHead, indexColHead + (i + 1)];
-      if (newIndex[1] <= 10){
-        if (usedIndexes.length > 0){
-          for (let i in usedIndexes){
-            if (newIndex[0] === usedIndexes[i] || newIndex[1] === usedIndexes[i]){
-              indexIsUsed = true;
-            }
+
+    } else if (shipDirection === 'left'){
+      let newIndex = [headPosition[0], headPosition[1] - (i + 1)];
+      if (newIndex[1] >= 1){
+        for (let i in usedIndexes){
+          if (newIndex[0] === usedIndexes[i][0] && newIndex[1] === usedIndexes[i][1]){
+            return randomizePos(size, usedIndexes, headPosition);
           }
         }
-        if (indexIsUsed){
-          return randomizePos(size, usedIndexes);
-        } else {
-          usedIndexes.push(newIndex[0]);
-          usedIndexes.push(newIndex[1]);
-          shipPosition.push(newIndex);
+        shipPosition.push(newIndex);
+      } else {
+        return randomizePos(size, usedIndexes, headPosition);
+      }
+
+    } else if (shipDirection === 'right'){
+      let newIndex = [headPosition[0], headPosition[1] + (i + 1)];
+      if (newIndex[1] <= 10){
+        for (let i in usedIndexes){
+          if (newIndex[0] === usedIndexes[i][0] && newIndex[1] === usedIndexes[i][1]){
+            return randomizePos(size, usedIndexes, headPosition);
+          }
         }
+        shipPosition.push(newIndex);
+      } else {
+        return randomizePos(size, usedIndexes, headPosition);
       }
     }
   }
-  if (shipPosition.length != size){
-    return randomizePos(size, usedIndexes);
-  } else {
-    for (let i in shipPosition){
+  
+  if (shipPosition.length === size){
+    for (let i = 1; i < shipPosition.length; i++){
       usedIndexes.push(shipPosition[i])
     }
+
     return shipPosition;
+  } else {
+    return randomizePos(size, usedIndexes, headPosition);
   }
+
+  
 }
 
 function printBoard (){
@@ -159,4 +164,7 @@ function printLine (shipsObj){
   console.log(board.join(border))
 }
 
-// printBoard()
+ships.forEach(ship=> {
+  console.log(JSON.stringify(ship.pos))
+})
+printBoard()
