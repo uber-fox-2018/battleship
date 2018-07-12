@@ -1,6 +1,7 @@
 /* STATIC BOARD IS COMPLETED */
 //Try this in terminal: node battleship A0 B0 E7 C7 A7 A8 B5 E8
 /* Expected Output:
+D is HIT!
 D SINKS!
 C is HIT!
 C is HIT!
