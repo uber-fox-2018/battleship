@@ -28,7 +28,6 @@ for (let i in ships){
   ships[i].pos = randomizePos (ships[i].size, usedIndexes, head);
 }
 
-
 function randomizeDir(){
   const Direction = ['up', 'down', 'left', 'right'];
   
@@ -37,8 +36,8 @@ function randomizeDir(){
 }
 
 function randomizeIndex1(){
-  let indexRowHead = Math.floor(Math.random() * 10);
-  let indexColHead = Math.floor(Math.random() * 10);
+  let indexRowHead = Math.ceil(Math.random() * 10);
+  let indexColHead = Math.ceil(Math.random() * 10);
 
   if (usedIndexes.length > 0){
     for (let i in usedIndexes){
@@ -148,21 +147,41 @@ function printLine (shipsObj){
     }
 
     for (let j = 1; j <= 10; j++){
+      let isThereAShip = false;
       for (let k in shipsObj){
         for (let l in shipsObj[k].pos){
         if (shipsObj[k].pos[l][0] === i && shipsObj[k].pos[l][1] === j ){
-          row.push(` ${shipsObj[k].name} |`);
-          j++;
+          row.push(` ${shipsObj[k].name} |`);    
+          isThereAShip = true;
         }
         }
       }
-      row.push('   |');
+      if (!isThereAShip){
+        row.push('   |')
+      }
     }
+
+    // for (let j = 1; j <= 10; j++){
+    //   for (let k in shipsObj){
+    //     for (let l in shipsObj[k].pos){
+    //     if (shipsObj[k].pos[l][0] === i && shipsObj[k].pos[l][1] === j ){
+    //       row.push(` ${shipsObj[k].name} |`);
+    //       j++;
+    //     }
+    //     }
+    //   }
+    //   row.push('   |');
+    // }
+
+
+
+
     board.push(row.join(''));
     debugger;
   }
   console.log(board.join(border))
 }
+
 
 ships.forEach(ship=> {
   console.log(JSON.stringify(ship.pos))
