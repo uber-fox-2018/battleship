@@ -1,4 +1,7 @@
+const input = process.argv.slice(2);
+
 let usedIndexes = [];
+let inputIndexes = [];
 
 let ships = [
   {
@@ -23,9 +26,39 @@ let ships = [
   }
 ]
 
-for (let i in ships){
-  let head = randomizeIndex1()
-  ships[i].pos = randomizePos (ships[i].size, usedIndexes, head);
+
+function putTheShip (ships){
+  for (let i in ships){
+    let head = randomizeIndex1()
+    ships[i].pos = randomizePos (ships[i].size, usedIndexes, head);
+  }
+}
+
+function extractIndex (input){
+  const converter = {
+    A: 1,
+    B: 2,
+    C: 3,
+    D: 4,
+    E: 5,
+    F: 6,
+    G: 7,
+    H: 8,
+    I: 9,
+    J: 10,
+  }
+
+  for (let i in input){
+    let indexX = Number(input[i].slice(1))
+    for (let j in converter){
+      
+      if (input[i][0] === j){
+        var indexY = converter[j]
+        inputIndexes.push([indexX, indexY]);
+      }
+    }
+  }
+  return inputIndexes;
 }
 
 function randomizeDir(){
@@ -150,40 +183,35 @@ function printLine (shipsObj){
       let isThereAShip = false;
       for (let k in shipsObj){
         for (let l in shipsObj[k].pos){
-        if (shipsObj[k].pos[l][0] === i && shipsObj[k].pos[l][1] === j ){
-          row.push(` ${shipsObj[k].name} |`);    
-          isThereAShip = true;
-        }
+          if (shipsObj[k].pos[l][0] === i && shipsObj[k].pos[l][1] === j ){
+            let isShipHit = false;
+            for (let m in inputIndexes){
+              if (shipsObj[k].pos[l][0] === inputIndexes[m][0] && shipsObj[k].pos[l][1] === inputIndexes[m][1]){
+                isShipHit = true;
+              }
+            }
+            if (isShipHit){
+              row.push(`XXX|`);    
+              isThereAShip = true;  
+              console.log(`You successfully hit ${shipsObj[k].name}`)
+            } else {
+              row.push(` ${shipsObj[k].name} |`);    
+              isThereAShip = true;
+            }
+          }
         }
       }
       if (!isThereAShip){
         row.push('   |')
       }
+         
     }
-
-    // for (let j = 1; j <= 10; j++){
-    //   for (let k in shipsObj){
-    //     for (let l in shipsObj[k].pos){
-    //     if (shipsObj[k].pos[l][0] === i && shipsObj[k].pos[l][1] === j ){
-    //       row.push(` ${shipsObj[k].name} |`);
-    //       j++;
-    //     }
-    //     }
-    //   }
-    //   row.push('   |');
-    // }
-
-
-
-
     board.push(row.join(''));
     debugger;
   }
   console.log(board.join(border))
 }
 
-
-ships.forEach(ship=> {
-  console.log(JSON.stringify(ship.pos))
-})
+extractIndex(input)
+putTheShip(ships)
 printBoard()
