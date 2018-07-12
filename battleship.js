@@ -1,3 +1,5 @@
+// input example : node battleship.js A2 B10
+
 const input = process.argv.slice(2);
 
 let usedIndexes = [];
@@ -212,6 +214,12 @@ function printLine (shipsObj){
   console.log(board.join(border))
 }
 
-extractIndex(input)
-putTheShip(ships)
-printBoard()
+if (input.length > 10) {
+  console.log('Maximum guess is 10 index')
+} else if (input.length < 1){
+  console.log('Please input your guesses, ex: A1, B10...')
+} else {
+  extractIndex(input)
+  putTheShip(ships)
+  printBoard()
+}
