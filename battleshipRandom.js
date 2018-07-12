@@ -5,16 +5,16 @@ var attack2 = argv[3]
 
 var objShip = [
     {
-        name: 'A', pos: [[0,0],[1,0]]
+        name: 'A', pos: [], size: 2, direction: 'down'
     },
     {
-        name: 'B', pos: [[2,7],[3,7],[4,7]]
+        name: 'B', pos: [], size: 3 , direction: 'left'
     },
     {
-        name: 'C', pos: [[2,1],[3,1],[4,1],[5,1],[6,1]]
+        name: 'C', pos: [], size: 5, direction: 'right'
     },
     {
-        name: 'D', pos: [[8,1],[8,2],[8,3],[8,4]]
+        name: 'D', pos: [], size: 4, direction: 'up'
     }
 ]
 
@@ -28,6 +28,7 @@ let arrBoard = board()
             arrBoard[kordinat][kordinat2] = objShip[i].name
         }
     }
+    randomDirection()
     board(arrBoard)
     return arrBoard
 }
@@ -49,6 +50,36 @@ let hasil = [];
     return hasil
 }
 
+function randomDirection(){
+    let arah = []
+
+    for(let i = 0; i<objShip.length; i++){
+        let kordinatX = Math.floor(Math.random()*5)
+        let kordinatY = Math.floor(Math.random()*5)
+
+        for(let j=0; j<objShip[i].size ; j++){
+            
+            let directRandom = objShip[i].direction[j]
+            if(directRandom === 'down'){
+                arah.push(kordinatY)
+            }
+            if(directRandom === 'up'){
+                parah.push(kordinatY)
+            }
+            if(directRandom === 'right'){
+                arah.push(kordinatX)
+            }
+            if(directRandom === 'left'){
+                arah.push(kordinatX)
+            }
+        }
+
+    }
+    // if(direction === 'down') {
+    // }
+    return arah
+}
+
 function attack(attack1,attack2){
     let allAttack = shipBoard()
     console.log(attack1);
@@ -58,7 +89,7 @@ function attack(attack1,attack2){
         console.log('duuuuuaaaarrrrr....');
         
     } else if (allAttack[attack1][attack2] === ' '){
-        allAttack[attack1][attack2] = 'V'
+        allAttack[attack1][attack2] = '/'
         console.log('miss....');
         
     }
